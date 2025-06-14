@@ -16,6 +16,8 @@ import StaticPage from "./pages/StaticPage";
 import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import SEOHead from "./components/SEOHead";
+import GoogleAnalytics from "./components/GoogleAnalytics";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +25,8 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <StoreProvider>
+        <SEOHead />
+        <GoogleAnalytics />
         <Toaster />
         <Sonner />
         <BrowserRouter>

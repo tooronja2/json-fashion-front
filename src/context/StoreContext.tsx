@@ -7,11 +7,21 @@ interface Config {
   nombre_tienda: string;
   meta_titulo_principal: string;
   meta_descripcion_principal: string;
+  meta_keywords?: string;
   logo_url: string;
   favicon_url: string;
   telefono_contacto_visible: string;
   email_contacto_principal: string;
   direccion_fisica_opcional: string;
+  google_analytics_id?: string;
+  seo_configuracion?: {
+    favicon_url: string;
+    og_image: string;
+    twitter_card: string;
+    twitter_site?: string;
+    sitemap_activo: boolean;
+    robots_txt_personalizado: string;
+  };
   banner_principal_home: {
     activo: boolean;
     imagen_url_desktop: string;
@@ -168,6 +178,13 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
         const safeConfigData = {
           ...configData,
           links_redes_sociales: configData.links_redes_sociales || {},
+          seo_configuracion: configData.seo_configuracion || {
+            favicon_url: '/assets/logos/favicon.ico',
+            og_image: '',
+            twitter_card: 'summary_large_image',
+            sitemap_activo: true,
+            robots_txt_personalizado: 'User-agent: *\nAllow: /'
+          },
           banner_principal_home: configData.banner_principal_home || {
             activo: false,
             imagen_url_desktop: '',
