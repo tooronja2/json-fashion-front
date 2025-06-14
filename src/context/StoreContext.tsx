@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { encryptCartData, decryptCartData, productSchema, configSchema } from '../utils/security';
+import { encryptCartData, decryptCartData } from '../utils/security';
 import { toast } from 'sonner';
 
 interface Config {
@@ -143,7 +143,7 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
         }
       }
     } catch (err) {
-      console.error('Failed to load cart data');
+      console.error('Failed to load cart data:', err);
       localStorage.removeItem('luxe_cart');
     }
   }, []);
@@ -156,7 +156,7 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
         localStorage.setItem('luxe_cart', encryptedCart);
       }
     } catch (err) {
-      console.error('Failed to save cart data');
+      console.error('Failed to save cart data:', err);
     }
   }, [cart]);
 
@@ -164,6 +164,7 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
   useEffect(() => {
     const loadData = async () => {
       try {
+        console.log('StoreContext: Starting data load');
         setIsLoading(true);
         setError(null);
 
@@ -172,7 +173,7 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
         if (!configResponse.ok) throw new Error('Failed to load configuration');
         
         const configData = await configResponse.json();
-        console.log('Raw config data:', configData);
+        console.log('StoreContext: Config loaded successfully', configData);
         
         // Use the configuration directly without Zod validation to avoid runtime errors
         // We'll trust that the JSON structure is correct since it's controlled by us
@@ -183,7 +184,7 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
         if (!productsResponse.ok) throw new Error('Failed to load products');
         
         const productsData = await productsResponse.json();
-        console.log('Raw products data:', productsData);
+        console.log('StoreContext: Products loaded successfully, count:', productsData.length);
         
         // Basic validation for products - handle null precio_oferta values
         const processedProducts = productsData.map((product: any) => ({
@@ -192,6 +193,7 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
         }));
         
         setProducts(processedProducts as Product[]);
+        console.log('StoreContext: Data loading completed successfully');
 
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to load store data';
@@ -200,6 +202,7 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
         toast.error('Error al cargar los datos de la tienda');
       } finally {
         setIsLoading(false);
+        console.log('StoreContext: Loading state set to false');
       }
     };
 
@@ -288,6 +291,8 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
     isLoading,
     error
   };
+
+  console.log('StoreContext render - isLoading:', isLoading, 'config exists:', !!config);
 
   return (
     <StoreContext.Provider value={value}>
