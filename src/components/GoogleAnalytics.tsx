@@ -15,15 +15,22 @@ const GoogleAnalytics: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    console.log('GoogleAnalytics init - isLoading:', isLoading, 'config:', config);
+    console.log('GoogleAnalytics init - isLoading:', isLoading, 'config:', !!config);
     
+    // Early return if loading or no config
     if (isLoading || !config?.google_analytics_id || config.google_analytics_id === 'G-XXXXXXXXXX') {
-      console.log('GoogleAnalytics early return - isLoading:', isLoading, 'GA ID:', config?.google_analytics_id);
+      console.log('GoogleAnalytics early return - not ready or invalid GA ID');
       return;
     }
 
     try {
       console.log('Initializing Google Analytics with ID:', config.google_analytics_id);
+
+      // Check if already initialized
+      if (window.gtag && window.dataLayer) {
+        console.log('Google Analytics already initialized');
+        return;
+      }
 
       // Initialize Google Analytics
       const script1 = document.createElement('script');

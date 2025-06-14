@@ -21,31 +21,40 @@ import GoogleAnalytics from "./components/GoogleAnalytics";
 
 const queryClient = new QueryClient();
 
+// Component that wraps the routes and includes SEO/Analytics
+const AppContent = () => {
+  return (
+    <>
+      <SEOHead />
+      <GoogleAnalytics />
+      <BrowserRouter>
+        <Header />
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/productos" element={<ProductList />} />
+            <Route path="/producto/:slug" element={<ProductDetail />} />
+            <Route path="/carrito" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/pedido-confirmado" element={<OrderConfirmation />} />
+            <Route path="/contacto" element={<Contact />} />
+            <Route path="/:pageName" element={<StaticPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+        <Footer />
+      </BrowserRouter>
+    </>
+  );
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <StoreProvider>
-        <SEOHead />
-        <GoogleAnalytics />
+        <AppContent />
         <Toaster />
         <Sonner />
-        <BrowserRouter>
-          <Header />
-          <main>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/productos" element={<ProductList />} />
-              <Route path="/producto/:slug" element={<ProductDetail />} />
-              <Route path="/carrito" element={<Cart />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/pedido-confirmado" element={<OrderConfirmation />} />
-              <Route path="/contacto" element={<Contact />} />
-              <Route path="/:pageName" element={<StaticPage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-          <Footer />
-        </BrowserRouter>
       </StoreProvider>
     </TooltipProvider>
   </QueryClientProvider>
