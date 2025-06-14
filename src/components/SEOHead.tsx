@@ -19,10 +19,10 @@ const SEOHead: React.FC<SEOHeadProps> = ({
   canonical,
   noIndex = false
 }) => {
-  const { config } = useStore();
+  const { config, isLoading } = useStore();
 
   useEffect(() => {
-    if (!config) return;
+    if (isLoading || !config) return;
 
     // Update title
     const finalTitle = title || config.meta_titulo_principal;
@@ -106,7 +106,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
     newSchemaScript.textContent = JSON.stringify(schema);
     document.head.appendChild(newSchemaScript);
 
-  }, [config, title, description, keywords, ogImage, canonical, noIndex]);
+  }, [config, isLoading, title, description, keywords, ogImage, canonical, noIndex]);
 
   return null;
 };

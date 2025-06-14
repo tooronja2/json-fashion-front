@@ -11,11 +11,11 @@ declare global {
 }
 
 const GoogleAnalytics: React.FC = () => {
-  const { config } = useStore();
+  const { config, isLoading } = useStore();
   const location = useLocation();
 
   useEffect(() => {
-    if (!config?.google_analytics_id || config.google_analytics_id === 'G-XXXXXXXXXX') {
+    if (isLoading || !config?.google_analytics_id || config.google_analytics_id === 'G-XXXXXXXXXX') {
       return;
     }
 
@@ -49,11 +49,11 @@ const GoogleAnalytics: React.FC = () => {
       document.head.removeChild(script1);
       document.head.removeChild(script2);
     };
-  }, [config]);
+  }, [config, isLoading]);
 
   // Track page views
   useEffect(() => {
-    if (!config?.google_analytics_id || config.google_analytics_id === 'G-XXXXXXXXXX') {
+    if (isLoading || !config?.google_analytics_id || config.google_analytics_id === 'G-XXXXXXXXXX') {
       return;
     }
 
@@ -64,7 +64,7 @@ const GoogleAnalytics: React.FC = () => {
         page_path: location.pathname + location.search
       });
     }
-  }, [location, config]);
+  }, [location, config, isLoading]);
 
   return null;
 };
